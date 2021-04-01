@@ -1,19 +1,17 @@
 import time
 from pynput import mouse as Mouse
-from enum import IntEnum
-
+from block import Block
+from material import Material
+from tool import Tool
 
 class Miner:
-    def __init__(self):
+    def __init__(self, cooldown, controller, mouseController):
         self.blockTool = self.init_block_tool_dictionary()
         self.materialSpeed = self.init_material_speed_increase()
         self.blockHardness = self.init_block_hardness()
-
-    def mine_block(self, mouse, block, tool, material):
-        mouse.press(Mouse.Button.left)
-        time.sleep(self.mining_speed(block, tool, material) + 0.05)
-        mouse.release(Mouse.Button.left)
-        time.sleep(0.05)
+        self.controller = controller
+        self.mouseController = mouseController
+        self.cooldown = cooldown
 
     def init_block_tool_dictionary(self):
         dic = {}
@@ -55,29 +53,23 @@ class Miner:
         else:
             return hardness*5
 
+    def mine_block(self, block, tool, material):
+        secs = self.mining_speed(block, tool, material)
+        self.mouseController.holdLeftClick(secs)
 
+    def strip_mine(self, block, tool, material):
+        while(True):
+            self.controller.moveForwardBlocks()
+            self.mouseController.vMove(200)
+            self.mine_block(block, tool, material)
+            time.sleep(self.cooldown)
 
-class Block(IntEnum):
-    STONE = 1
-    DIRT = 2
-    SAND = 3
-    COAL = 4
-    DIAMOND = 5
-    IRON = 6
-    GOLD = 7
+            self.mouseController.vMove(-200)
+            self.mine_block(block, tool, material)
+            time.sleep(self.cooldown)
 
-class Tool(IntEnum):
-    HOE = 1
-    SHOVEL = 2
-    PICKAXE = 3
-    AXE = 4
-    SWORD = 5
-
-class Material(IntEnum):
-    NONE = 1
-    WOOD = 2
-    STONE = 3
-    IRON = 4
-    DIAMOND = 5
-    GOLD = 6
-    NETHERITE = 7
+    def place_torch(self, torchKey, pickaxeKey):
+        self.mouseController.turnLeft()
+        self.controller.changeItem(torchKey)
+        self.mouseController.turnRight()
+        self.controller.changeItem(tool)

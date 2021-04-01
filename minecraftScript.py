@@ -1,66 +1,23 @@
-from pynput.keyboard import Key, Controller, Listener
-import keyboard as kkeyboard
-from pynput import mouse as Mouse
+#from pynput.keyboard import Key, Controller, Listener
+#import keyboard as kkeyboard
+#from pynput import mouse as Mouse
 import pynput
 import time
-
 import pyautogui
-from mine import Miner
 
-def moveMinecraftPlayer():
-    while(True):
-        keyboard.press('w')
-        time.sleep(1)
-        keyboard.release('w')
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.dirname('Enums/')))
 
-        keyboard.press('s')
-        time.sleep(1)
-        keyboard.release('s')
+from miner import Miner
+from controller import Controller
+from mouseController import MouseController
+from block import Block
+from material import Material
+from tool import Tool
 
 def strip_mine():
-    i = 0
-    while(True):
-        #keyboard.press('w')
-        pyautogui.keyDown('w')
-        time.sleep(0.5)
-        pyautogui.keyUp('w')
-        #keyboard.release('w')
-
-        #mouse.click(Mouse.Button.left,1)
-        mouse.move(0, -200)
-        miner.mine_block(mouse, 1, 3, 2)
-        time.sleep(0.2)
-        
-        mouse.move(0, 200)
-        miner.mine_block(mouse, 1, 3, 2)
-        time.sleep(0.2)
-
-        #if i%20 == 0:
-            #mouse.click(Mouse.Button.right,1)
-        #i = i+1
-
-def move_smooth(xm, ym, t):
-    for i in range(t):
-        if i < t/2:
-            h = i
-        else:
-            h = t - i
-        mouse.move(h*xm, h*ym)
-        time.sleep(1/60)
-
-def move_mouse():
-    while(True):
-        print(mouse.position)
-        mouse.move(0,-100)
-        #move_smooth(0,-1, 40)
-        time.sleep(1)
-        print(mouse.position)
-        mouse.move(0, 100)
-        time.sleep(1)
-        
-
-        #mouse.scroll(1,1)
-        #mouse._position_set((position[0]+50, position[1]+100))
+    miner.strip_mine(1, 3, 3)
 
 def move_mouse_with_keyboard():
     while(True):
@@ -74,12 +31,11 @@ def move_mouse_with_keyboard():
         elif kkeyboard.is_pressed('l'):
             mouse.move(10, 0)
 
-mouse = Mouse.Controller()
-keyboard = Controller()
-listener = Listener()
-miner = Miner()
+cooldown = 0.1
+delay = 0.101
+mouseController = MouseController(cooldown, delay)
+controller = Controller(cooldown, delay)
+miner = Miner(cooldown, controller, mouseController)
 time.sleep(5)
-#move_mouse_with_keyboard()
-#move_mouse()
+
 strip_mine()
-#moveMinecraftPlayer()
