@@ -15,9 +15,18 @@ from mouseController import MouseController
 from block import Block
 from material import Material
 from tool import Tool
+from screenReader import ScreenReader
 
 def strip_mine():
-    miner.strip_mine(1, 3, 3)
+    i = 0
+    while(True):
+        #miner.strip_mine(i, 1, 3, 3)
+        img = screenReader.capture_screen(True)
+        i = 1 + i
+
+def record_screen():
+    while(True):
+        img = screenReader.capture_screen(True)
 
 def move_mouse_with_keyboard():
     while(True):
@@ -36,6 +45,7 @@ delay = 0.101
 mouseController = MouseController(cooldown, delay)
 controller = Controller(cooldown, delay)
 miner = Miner(cooldown, controller, mouseController)
+screenReader = ScreenReader()
 time.sleep(5)
 
 strip_mine()

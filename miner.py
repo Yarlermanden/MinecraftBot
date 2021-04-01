@@ -68,13 +68,10 @@ class Miner:
         time.sleep(self.cooldown)
 
 
-    def strip_mine(self, block, tool, material):
-        i = 0
-        while(True):
-            self.strip_mine2x1(block, tool, material)
-            if i%8 ==7:
-                self.place_torch('2','1')
-            i = i+1
+    def strip_mine(self, i, block, tool, material):
+        self.strip_mine2x1(block, tool, material)
+        if i%8 ==7:
+            self.place_torch('2','1')
 
     def place_torch(self, torchKey, toolKey):
         self.mouseController.turnLeft()
