@@ -4,6 +4,9 @@ from pynput import mouse as Mouse
 import pynput
 import time
 
+import pyautogui
+from mine import Miner
+
 def moveMinecraftPlayer():
     while(True):
         keyboard.press('w')
@@ -18,20 +21,18 @@ def strip_mine():
     i = 0
     while(True):
         #keyboard.press('w')
-        #time.sleep(1)
+        pyautogui.keyDown('w')
+        time.sleep(0.5)
+        pyautogui.keyUp('w')
         #keyboard.release('w')
 
         #mouse.click(Mouse.Button.left,1)
         mouse.move(0, -200)
-        mouse.press(Mouse.Button.left)
-        time.sleep(1.5)
-        mouse.release(Mouse.Button.left)
+        miner.mine_block(mouse, 1, 3, 2)
         time.sleep(0.2)
         
         mouse.move(0, 200)
-        mouse.press(Mouse.Button.left)
-        time.sleep(1.5)
-        mouse.release(Mouse.Button.left)
+        miner.mine_block(mouse, 1, 3, 2)
         time.sleep(0.2)
 
         #if i%20 == 0:
@@ -76,6 +77,7 @@ def move_mouse_with_keyboard():
 mouse = Mouse.Controller()
 keyboard = Controller()
 listener = Listener()
+miner = Miner()
 time.sleep(5)
 #move_mouse_with_keyboard()
 #move_mouse()
