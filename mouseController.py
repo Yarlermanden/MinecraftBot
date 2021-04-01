@@ -8,9 +8,15 @@ class MouseController:
         self.delay = delay
 
     def holdLeftClick(self, secs = 0.1):
-        self.mouse.press(Mouse.Button.left)
-        time.sleep(secs+self.delay*3) # as buffer
-        self.mouse.release(Mouse.Button.left)
+        self.holdMouseButton(secs+self.delay*3, Mouse.Button.left)
+
+    def holdRightClick(self, secs = 0.1):
+        self.holdMouseButton(secs, Mouse.Button.right)
+
+    def holdMouseButton(self, secs, button):
+        self.mouse.press(button)
+        time.sleep(secs)
+        self.mouse.release(button)
         time.sleep(self.cooldown)
 
     def vMove(self, value):

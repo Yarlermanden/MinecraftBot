@@ -57,19 +57,28 @@ class Miner:
         secs = self.mining_speed(block, tool, material)
         self.mouseController.holdLeftClick(secs)
 
+    def strip_mine2x1(self, block, tool, material):
+        self.controller.moveForwardBlocks()
+        self.mouseController.vMove(200)
+        self.mine_block(block, tool, material)
+        time.sleep(self.cooldown)
+
+        self.mouseController.vMove(-200)
+        self.mine_block(block, tool, material)
+        time.sleep(self.cooldown)
+
+
     def strip_mine(self, block, tool, material):
+        i = 0
         while(True):
-            self.controller.moveForwardBlocks()
-            self.mouseController.vMove(200)
-            self.mine_block(block, tool, material)
-            time.sleep(self.cooldown)
+            self.strip_mine2x1(block, tool, material)
+            if i%8 ==7:
+                self.place_torch('2','1')
+            i = i+1
 
-            self.mouseController.vMove(-200)
-            self.mine_block(block, tool, material)
-            time.sleep(self.cooldown)
-
-    def place_torch(self, torchKey, pickaxeKey):
+    def place_torch(self, torchKey, toolKey):
         self.mouseController.turnLeft()
         self.controller.changeItem(torchKey)
+        self.mouseController.holdRightClick()
         self.mouseController.turnRight()
-        self.controller.changeItem(tool)
+        self.controller.changeItem(toolKey)
