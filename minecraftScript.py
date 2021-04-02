@@ -25,7 +25,7 @@ def farming():
     time.sleep(2)
     while(True):
         x = random.randint(0,5)
-        print(x)
+        #print(x)
         #agent.action(x)
         agent.validate_action()
         time.sleep(1)

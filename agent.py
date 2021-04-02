@@ -7,6 +7,7 @@ from material import Material
 from tool import Tool
 from screenReader import ScreenReader
 from board import Board
+from ocr import OCR
 
 
 class Agent:
@@ -19,6 +20,8 @@ class Agent:
         self.miner = Miner(self.cooldown, self.controller, self.mouseController)
         self.farmer = Farmer(self.cooldown, self.mouseController)
         self.screenReader = ScreenReader()
+        self.ocr = OCR()
+        self.previousCount = 0
 
     def strip_mine(self, i):
         self.miner.strip_mine(i, Block.STONE, Tool.PICKAXE, Material.STONE)
@@ -43,4 +46,10 @@ class Agent:
             self.farm()
 
     def validate_action(self):
-        img = self.screenReader.capture_screen(True, False, 70, 80, 4110, 1330)
+        img = self.screenReader.capture_screen(True, False, 80, 80, 4110, 1330)
+        number = self.ocr.read_from_image(img)
+        if number > self.previousCount + 50 or number < self.previousCount - 50:
+            print('change')
+
+        self.previousCount = number
+
