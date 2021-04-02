@@ -15,8 +15,12 @@ class ScreenReader():
             img = sct.grab(monitor)
             return Image.frombytes('RGB', img.size, img.bgra, 'raw', 'RGBX')
 
-    def capture_screen(self, showImage):
-        frame = self.mss_record(self.width, self.height, self.width, 0)
+    def capture_screen(self, showImage = False, downscale = True, width = None, height = None, x = None, y = 0):
+        if width == None: width = self.width
+        if height == None: height = self.height
+        if x == None: x = self.width
+
+        frame = self.mss_record(width, height, x, y)
         frame = np.array(frame)
         #frame = cv2.resize(frame, dsize=(160,90), interpolation=cv2.INTER_CUBIC)
         frame = cv2.resize(frame, dsize=(320,180), interpolation=cv2.INTER_CUBIC)

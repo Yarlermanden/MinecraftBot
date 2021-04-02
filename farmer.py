@@ -7,9 +7,9 @@ class Farmer:
         self.mouseController = mouseController
         self.cooldown = cooldown
 
-    def farm():
-        mouseController.holdLeftClick()
-        mouseController.holdRightClick()
-        time.sleep(cooldown)
+    def farm(self):
+        self.mouseController.holdLeftClick()
+        self.mouseController.holdRightClick()
+        time.sleep(self.cooldown)
 
 

@@ -4,11 +4,12 @@ import pyautogui
 import time
 
 class Controller():
-    def __init__(self, cooldown, delay):
+    def __init__(self, cooldown, delay, board):
         self.mouse = Mouse.Controller()
         self.secPrBlockWalk = 1/4.317
         self.delay = delay
         self.cooldown = cooldown
+        self.board = board
 
     def moveForwardSec(self, secs):
         self.move('w', secs)
@@ -24,15 +25,19 @@ class Controller():
 
     def moveForwardBlocks(self, blocks = 1):
         self.move('w', blocks*self.secPrBlockWalk)
+        self.board.move_x(blocks)
 
     def moveBackwardsBlocks(self, blocks = 1):
         self.move('s', blocks*self.secPrBlockWalk)
+        self.board.move_x(-blocks)
 
     def moveLeftBlocks(self, blocks = 1):
         self.move('a', blocks*self.secPrBlockWalk)
+        self.board.move_y(-blocks)
 
     def moveRightBlocks(self, blocks = 1):
         self.move('d', blocks*self.secPrBlockWalk)
+        self.board.move_y(blocks)
 
     def move(self, key, secs):
         pyautogui.keyDown(key)

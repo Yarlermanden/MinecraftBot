@@ -7,6 +7,7 @@ import pyautogui
 
 import sys
 import os
+import random
 sys.path.insert(0, os.path.abspath(os.path.dirname('Enums/')))
 
 from agent import Agent
@@ -18,6 +19,16 @@ def strip_mine():
         agent.strip_mine(i)
         #img = screenReader.capture_screen(True)
         i = 1 + i
+
+def farming():
+    agent.validate_action()
+    time.sleep(2)
+    while(True):
+        x = random.randint(0,5)
+        print(x)
+        #agent.action(x)
+        agent.validate_action()
+        time.sleep(1)
 
 def record_screen():
     while(True):
@@ -35,8 +46,10 @@ def move_mouse_with_keyboard():
         elif kkeyboard.is_pressed('l'):
             mouse.move(10, 0)
 
-agent = Agent()
 screenReader = ScreenReader()
+agent = Agent()
 time.sleep(5)
 
-strip_mine()
+#strip_mine()
+farming()
+#record_screen()
