@@ -22,8 +22,8 @@ class ScreenReader():
 
         frame = self.mss_record(width, height, x, y)
         frame = np.array(frame)
-        #frame = cv2.resize(frame, dsize=(160,90), interpolation=cv2.INTER_CUBIC)
-        frame = cv2.resize(frame, dsize=(320,180), interpolation=cv2.INTER_CUBIC)
+        frame = cv2.resize(frame, dsize=(160,90), interpolation=cv2.INTER_CUBIC)
+        #frame = cv2.resize(frame, dsize=(320,180), interpolation=cv2.INTER_CUBIC)
         if showImage:
             self.show_image('img', frame)
 

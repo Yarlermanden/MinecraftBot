@@ -10,24 +10,24 @@ import os
 import random
 sys.path.insert(0, os.path.abspath(os.path.dirname('Enums/')))
 
-from agent import Agent
+from bot import Bot
 from screenReader import ScreenReader
 
 def strip_mine():
     i = 0
     while(True):
-        agent.strip_mine(i)
+        bot.strip_mine(i)
         #img = screenReader.capture_screen(True)
         i = 1 + i
 
 def farming():
-    agent.validate_action()
+    bot.validate_action()
     time.sleep(2)
     while(True):
         x = random.randint(0,5)
         #print(x)
-        #agent.action(x)
-        agent.validate_action()
+        #bot.action(x)
+        bot.validate_action()
         time.sleep(1)
 
 def record_screen():
@@ -47,7 +47,7 @@ def move_mouse_with_keyboard():
             mouse.move(10, 0)
 
 screenReader = ScreenReader()
-agent = Agent()
+bot = Bot()
 time.sleep(5)
 
 #strip_mine()
