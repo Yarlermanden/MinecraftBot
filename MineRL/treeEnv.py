@@ -9,8 +9,8 @@ import random
 
 linux = False
 
-#env = gym.make('MineRLTreechopVectorObf-v0')
-env = gym.make('MineRLNavigateDense-v0')
+env = gym.make('MineRLTreechopVectorObf-v0')
+#env = gym.make('MineRLNavigateDense-v0')
 env.STEP_OPTIONS=300
 #env.port=6666
 #env.seed(420)
@@ -36,10 +36,13 @@ while not done:
     action = env.action_space.noop()
 
     action['camera'] = [0, 0]
-    action['attack'] = 1
-    action['back'] = 0
+    action['attack'] = 0.2
     action['forward'] = 1
-    action['jump'] = 1
+    action['back'] = 1
+    action['left'] = 0.2
+    action['right'] = 0.2
+    #action['back'] = 0
+    #action['forward'] = 1
     #print('action: ' + str(action))
 
 
