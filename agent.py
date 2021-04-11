@@ -1,55 +1,69 @@
-from farmer import Farmer
-from miner import Miner
-from controller import Controller
-from mouseController import MouseController
-from block import Block
-from material import Material
-from tool import Tool
-from screenReader import ScreenReader
-from board import Board
-from ocr import OCR
+from torch import nn
+import torch
 
+import numpy as np
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Flatten
+from tensorflow.keras.optimizers import Adam
+
+from rl.agents import DQNAgent
+from rl.policy import BoltzmannQPolicy
+from rl.memory import SequentialMemory
+
+from environment import Environment
 
 class Agent:
-    def __init__(self):
-        self.cooldown = 0.1
-        self.delay = 0.101
-        self.board = Board()
-        self.controller = Controller(self.cooldown, self.delay, self.board)
-        self.mouseController = MouseController(self.cooldown, self.delay)
-        self.miner = Miner(self.cooldown, self.controller, self.mouseController)
-        self.farmer = Farmer(self.cooldown, self.mouseController)
-        self.screenReader = ScreenReader()
-        self.ocr = OCR()
-        self.previousCount = 0
+    #def __init__(self):
+    #def __init__(self, env, conv_list, dense_list, util_list):
+    def __init__(states, actions, bot):
+        self.environment = Environment(bot)
+        #self.states = self.environment.observation_space
+        self.states = self.environment.observation_space.shape[0]
+        self.actions = self.environment.action_space.n
+        #self.env = env
+        #self.conv_list = conv_list
+        #self.dense_list = dense_list
+        #self.conv2d = torch.nn.Conv2d(
+        #self.GAMMA=0.99
+        #self.BATCH_SIZE=32
+        #self.BUFFER_SIZE=50000
+        #self.MIN_REPLAY_SIZE=1000
+        #self.EPSILON_START=1.0
+        #self.EPSILON_END=0.02
+        #self.EPSILON_DECAY=10000
+        #self.TARGET_UPDATE_FREQ=1000
+        self.model = build_model(states, actions)
+        self.dqn = build_agent(self.model, actions)
+        self.dqn.compile(Adam(learning_rate=1e-3), metrics=['mae'])
+        self.dqn.fit(self.environment, nb_steps=50000, visualize=False, verbose=1) #Use when we want to train
+        #self.load() #Use when we want to load instead
 
-    def strip_mine(self, i):
-        self.miner.strip_mine(i, Block.STONE, Tool.PICKAXE, Material.STONE)
+    def build_model(self, states, actions):
+        model = Sequential()
+        model.add(Flatten(input_shape=(1,states)))
+        model.add(Dense(24, activation='relu'))
+        model.add(Dense(24, activation='relu'))
+        model.add(Dense(actions, activation='linear'))
+        return model
 
-    def farm(self):
-        self.farmer.farm()
+    def build_agent(self, model, actions):
+        policy = BoltzmannQPolicy()
+        memory = SequentialMemory(limit=50000, window_length=1)
+        dqn = DQNAgent(model=model, memory=memory, policy=policy, nb_actions=actions, nb_steps_warmup=10, target_model_update=1e-2)
+        return dqn
 
-    def action(self, x):
-        if x == 1:
-            if self.board.x != self.board.sizeX-1:
-                self.controller.moveForwardBlocks()
-        elif x == 2:
-            if self.board.x != 0:
-                self.controller.moveBackwardsBlocks()
-        elif x == 3:
-            if self.board.y != self.board.sizeY-1:
-                self.controller.moveRightBlocks()
-        elif x == 4:
-            if self.board.y != 0:
-                self.controller.moveLeftBlocks()
-        elif x == 5:
-            self.farm()
+    def dqn_compile(self):
+        self.dqn.compile(Adam(lr=1e-3), metrics=['mae'])
 
-    def validate_action(self):
-        img = self.screenReader.capture_screen(True, False, 80, 80, 4110, 1330)
-        number = self.ocr.read_from_image(img)
-        if number > self.previousCount + 50 or number < self.previousCount - 50:
-            print('change')
+    def train(self, state, q_values):
+        #self.dqn.fit(
+        self.model.fit(state, q_values, verbose=0)
 
-        self.previousCount = number
+    def predict(self, state):
+        return self.model.predict(state)
 
+    def save(self):
+        self.dqn.save_weights('dqn_weights.h5f', overwrite=True)
+
+    def load(self):
+        self.sqn.load_weights('dqn_weights.h5f')
