@@ -19,7 +19,7 @@ def make_interactive(env, lorteString):
     env.make_interactive(port=6666, realtime=True)
 _thread.start_new_thread(make_interactive, (env, 's'))
 #env.make_interactive(port=6666, realtime=True)
-env.render()
+#env.render()
 
 net_reward = 0
 
@@ -31,20 +31,14 @@ while not done:
         cv2.imshow('h', img)
         cv2.waitKey(1)
     else:
-        env.render()
+        print('hi')
+        #env.render()
     #action = env.action_space.sample()
     action = env.action_space.noop()
+    print(action)
 
     action['camera'] = [0, 0]
-    action['attack'] = 0.2
     action['forward'] = 1
-    action['back'] = 1
-    action['left'] = 0.2
-    action['right'] = 0.2
-    #action['back'] = 0
-    #action['forward'] = 1
-    #print('action: ' + str(action))
-
 
     obs,reward,done,info = env.step(action)
     net_reward += reward
