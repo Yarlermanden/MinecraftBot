@@ -1,0 +1,6 @@
+
+Lav en main metode
+Lav en metode der kan kaldes for træning samt en metoder der kan kaldes for at load session og afprøve
+evt tilføj mode der tillader at afbryde træning og gemme QTable med det samme, som den er på det tidspunkt
+Tilføj mode der tillader at load gammel session og fortsætte træning
+some kind of backup, som tages hver x episode
